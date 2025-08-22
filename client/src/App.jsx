@@ -11,6 +11,9 @@ const startOfDayKey = (d) => {
 const todayKey = startOfDayKey(new Date());
 
 const API_BASE = "http://localhost:5000/api"; // adjust if your backend port changes
+const API = axios.create({
+  baseURL: "https://event-manager-backend.onrender.com/api"
+});
 
 export default function App() {
   /** ===== State ===== **/
