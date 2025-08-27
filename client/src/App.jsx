@@ -10,7 +10,7 @@ const startOfDayKey = (d) => {
 };
 const todayKey = startOfDayKey(new Date());
 
-const API_BASE = "http://localhost:5000/api"; // adjust if your backend port changes
+const API_BASE = "http://localhost:5000/api/events"; // adjust if your backend port changes
 
 export default function App() {
   /** ===== State ===== **/
@@ -26,27 +26,27 @@ export default function App() {
   const [err, setErr] = useState("");
 
   /** ===== CRUD: Read ===== **/
-  useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(`${API_BASE}/events`);
-        const data = await res.json();
-        setEvents(Array.isArray(data) ? data : []);
-        setErr("");
-      } catch (e) {
-        setErr("Failed to load events.");
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+useEffect(() => {
+  (async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(API_BASE);  // ✅ just API_BASE
+      const data = await res.json();
+      setEvents(Array.isArray(data) ? data : []);
+      setErr("");
+    } catch (e) {
+      setErr("Failed to load events.");
+    } finally {
+      setLoading(false);
+    }
+  })();
+}, []);
 
   /** ===== CRUD: Create ===== **/
   const handleAdd = async () => {
     if (!title.trim() || !date.trim()) return;
     try {
-      const res = await fetch(`${API_BASE}/events`, {
+      const res = await fetch(`${API_BASE}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, date }),
@@ -65,7 +65,7 @@ export default function App() {
   /** ===== CRUD: Delete ===== **/
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`${API_BASE}/events/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API_BASE}/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Delete failed");
       setEvents((prev) => prev.filter((e) => e._id !== id));
       setErr("");
@@ -87,7 +87,7 @@ export default function App() {
   const handleUpdate = async (id) => {
     if (!editTitle.trim() || !editDate.trim()) return;
     try {
-      const res = await fetch(`${API_BASE}/events/${id}`, {
+      const res = await fetch(`${API_BASE}/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: editTitle, date: editDate }),

@@ -5,15 +5,23 @@ const router = express.Router();
 
 // Get all events
 router.get("/", async (req, res) => {
-  const events = await Event.find();
-  res.json(events);
+  try {
+    const events = await Event.find();
+    res.json(events);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
-// Create event
+// POST new event
 router.post("/", async (req, res) => {
-  const newEvent = new Event(req.body);
-  await newEvent.save();
-  res.status(201).json(newEvent);
+  try {
+    const newEvent = new Event(req.body);
+    const savedEvent = await newEvent.save();
+    res.status(201).json(savedEvent);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 });
 
 router.delete("/:id", async (req, res) => {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../api";
+API.get("/events")
 
 export default function EventList() {
   const [events, setEvents] = useState([]);
